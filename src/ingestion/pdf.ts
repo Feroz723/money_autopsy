@@ -1,9 +1,15 @@
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/legacy/build/pdf.mjs";
+import pdfjsWorker from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 import { StatementImportError } from "./errors.js";
 import { findHeaderRow, hasLikelyTransactions } from "./headers.js";
 import { normalizeDate } from "./date.js";
 import { detectIciciDetailedTable } from "./profiles/icici-bank-detailed.js";
 import type { CellValue, DetectedTable } from "./types.js";
+
+// Set worker source for browser runtime
+if (typeof window !== "undefined" && !GlobalWorkerOptions.workerSrc) {
+  GlobalWorkerOptions.workerSrc = pdfjsWorker;
+}
 
 interface PositionedTextItem {
   str: string;
@@ -125,14 +131,20 @@ export async function inspectPdf(bytes: ArrayBuffer): Promise<DetectedTable> {
     });
     doc = await loadingTask.promise;
   } catch (error: unknown) {
-    const errString = String(error);
-    if (errString.includes("PasswordException") || errString.includes("password")) {
+    const errString = String((error as { message?: string })?.message ?? error ?? "");
+    const errName = String((error as { name?: string })?.name ?? "");
+    if (
+      errName === "PasswordException" ||
+      errString.includes("PasswordException") ||
+      errString.toLowerCase().includes("password")
+    ) {
       throw new StatementImportError(
         "PDF_ENCRYPTED",
         "This PDF is password-protected and couldn't be read in the browser."
       );
     }
-    throw new StatementImportError("PDF_READ_FAILED", "The PDF file could not be read safely.");
+    const detail = (error as { message?: string })?.message ? ` (${(error as { message?: string }).message})` : "";
+    throw new StatementImportError("PDF_READ_FAILED", `The PDF file could not be read safely${detail}.`);
   }
 
   if (doc.numPages === 0) {
