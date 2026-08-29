@@ -64,7 +64,13 @@ export function normalizeDate(value: CellValue): DateParseResult {
     return parseExcelSerial(value);
   }
 
-  const text = value.trim();
+  // Strip trailing timestamps e.g. ", 08:30 PM", " 14:20:00", " at 3:30 pm"
+  let text = String(value)
+    .trim()
+    .replace(/(,\s*|\s+at\s+|\s+)\d{1,2}:\d{2}(:\d{2})?(\s*(am|pm))?/i, "")
+    .trim();
+
+  // 1. Numeric: DD/MM/YYYY or DD-MM-YYYY or DD/MM/YY
   const numericMatch = /^(\d{1,2})[/-](\d{1,2})[/-](\d{2}|\d{4})$/.exec(text);
   if (numericMatch !== null) {
     const day = Number(numericMatch[1]);
@@ -74,16 +80,28 @@ export function normalizeDate(value: CellValue): DateParseResult {
     return resultFromParts(day, month, year);
   }
 
-  const namedMonthMatch = /^(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{4})$/.exec(text);
-  if (namedMonthMatch !== null) {
-    const month = MONTHS[namedMonthMatch[2]?.slice(0, 3).toLowerCase() ?? ""];
-    if (month === undefined) {
-      return { value: null, error: "Date month is invalid." };
+  // 2. Named month first: "May 12, 2024" or "Apr 01 2022"
+  const monthFirstMatch = /^([A-Za-z]{3,9})\s+(\d{1,2}),?\s+(\d{4})$/.exec(text);
+  if (monthFirstMatch !== null) {
+    const month = MONTHS[monthFirstMatch[1]?.slice(0, 3).toLowerCase() ?? ""];
+    if (month !== undefined) {
+      return resultFromParts(Number(monthFirstMatch[2]), month, Number(monthFirstMatch[3]));
     }
-    return resultFromParts(Number(namedMonthMatch[1]), month, Number(namedMonthMatch[3]));
   }
 
-  const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  // 3. Named month middle: "12 May 2024" or "12-May-2024" or "12/May/2024"
+  const namedMonthMatch = /^(\d{1,2})[\s/-]+([A-Za-z]{3,9})[\s/-]+(\d{2}|\d{4})$/.exec(text);
+  if (namedMonthMatch !== null) {
+    const month = MONTHS[namedMonthMatch[2]?.slice(0, 3).toLowerCase() ?? ""];
+    if (month !== undefined) {
+      const sourceYear = Number(namedMonthMatch[3]);
+      const year = namedMonthMatch[3]?.length === 2 ? normalizeTwoDigitYear(sourceYear) : sourceYear;
+      return resultFromParts(Number(namedMonthMatch[1]), month, year);
+    }
+  }
+
+  // 4. ISO format: "2024-05-12" or "2024/05/12"
+  const isoMatch = /^(\d{4})[/-](\d{1,2})[/-](\d{1,2})$/.exec(text);
   if (isoMatch !== null) {
     return resultFromParts(Number(isoMatch[3]), Number(isoMatch[2]), Number(isoMatch[1]));
   }

@@ -4,14 +4,15 @@ import { detectFormat } from "../src/ingestion/format.js";
 import { analyzeTransactions } from "../src/analysis/index.js";
 import { generateAutopsy } from "../src/autopsy/index.js";
 import {
+  corruptedBalancePdfBytes,
   genericPdfBytes,
   hdfcBankPdfBytes,
   iciciBankPdfBytes,
   multiPagePdfBytes,
-  wrappedNarrationPdfBytes,
-  corruptedBalancePdfBytes,
+  phonepeStatementPdfBytes,
   scannedEmptyPdfBytes,
   unsupportedLayoutPdfBytes,
+  wrappedNarrationPdfBytes,
 } from "./fixtures/pdf-statements.js";
 
 describe("PDF Ingestion & Profile Detection", () => {
@@ -138,6 +139,36 @@ describe("PDF Ingestion & Profile Detection", () => {
         bytes: unsupportedLayoutPdfBytes(),
       })
     ).rejects.toThrow(/No transaction table/);
+  });
+
+  it("ingests and parses a PhonePe statement PDF with single amount and type columns", async () => {
+    const result = await ingestStatement({
+      name: "phonepe_statement.pdf",
+      bytes: phonepeStatementPdfBytes(),
+    });
+
+    expect(result.format).toBe("PDF");
+    expect(result.transactions).toHaveLength(3);
+    expect(result.transactions[0]).toMatchObject({
+      date: "2024-05-12",
+      description: "Paid to Swiggy",
+      debit: 450_00n,
+      credit: null,
+    });
+    expect(result.transactions[1]).toMatchObject({
+      date: "2024-05-13",
+      description: "Received from Ramesh",
+      debit: null,
+      credit: 2_500_00n,
+    });
+    expect(result.transactions[2]).toMatchObject({
+      date: "2024-05-14",
+      description: "Electricity Bill Paid",
+      debit: 1_200_00n,
+      credit: null,
+    });
+    expect(result.totals.debit).toBe(1_650_00n);
+    expect(result.totals.credit).toBe(2_500_00n);
   });
 
   it("flows seamlessly into analysis and autopsy findings engine", async () => {

@@ -118,25 +118,81 @@ function normalizeRow(
     return { transaction: null, reason: "Date is invalid or missing." };
   }
 
-  const debit = parseTransactionAmount(valueAt(row, headers.debit), "debit");
-  if (debit.reason !== null) {
-    return { transaction: null, reason: debit.reason };
-  }
-  const credit = parseTransactionAmount(valueAt(row, headers.credit), "credit");
-  if (credit.reason !== null) {
-    return { transaction: null, reason: credit.reason };
-  }
-  if (debit.value !== null && credit.value !== null) {
-    return { transaction: null, reason: "Both debit and credit amounts are present." };
-  }
-  if (debit.value === null && credit.value === null) {
-    return { transaction: null, reason: "Transaction amount or direction is missing." };
-  }
-
   const description = textAt(valueAt(row, headers.description));
   const reference = textAt(valueAt(row, headers.reference));
   if (description === null && reference === null) {
     return { transaction: null, reason: "Description or reference is missing." };
+  }
+
+  let debitValue: MinorUnits | null = null;
+  let creditValue: MinorUnits | null = null;
+
+  if (headers.amount !== undefined && headers.debit === undefined && headers.credit === undefined) {
+    const rawAmtValue = valueAt(row, headers.amount);
+    const parsedAmount = normalizeMoney(rawAmtValue);
+    if (parsedAmount.error !== undefined) {
+      return { transaction: null, reason: "Transaction amount is invalid." };
+    }
+    if (parsedAmount.value === null || parsedAmount.value === 0n) {
+      return { transaction: null, reason: "Transaction amount is missing or zero." };
+    }
+
+    const typeText = headers.type !== undefined ? (textAt(valueAt(row, headers.type))?.toLowerCase() ?? "") : "";
+    const rawAmtText = typeof rawAmtValue === "string" ? rawAmtValue.toLowerCase() : "";
+    const descText = description?.toLowerCase() ?? "";
+
+    const isCredit =
+      typeText.includes("cr") ||
+      typeText.includes("credit") ||
+      typeText.includes("received") ||
+      typeText.includes("refund") ||
+      typeText.includes("cashback") ||
+      typeText.includes("deposit") ||
+      rawAmtText.includes("cr") ||
+      rawAmtText.startsWith("+") ||
+      descText.startsWith("received from") ||
+      descText.startsWith("refund from") ||
+      descText.startsWith("cashback");
+
+    const isDebit =
+      typeText.includes("dr") ||
+      typeText.includes("debit") ||
+      typeText.includes("paid") ||
+      typeText.includes("out") ||
+      typeText.includes("transfer to") ||
+      typeText.includes("withdrawal") ||
+      rawAmtText.includes("dr") ||
+      rawAmtText.startsWith("-") ||
+      descText.startsWith("paid to") ||
+      descText.startsWith("transfer to") ||
+      descText.startsWith("sent to") ||
+      parsedAmount.value < 0n;
+
+    const absAmount = parsedAmount.value < 0n ? -parsedAmount.value : parsedAmount.value;
+
+    if (isCredit && !isDebit) {
+      creditValue = absAmount;
+    } else {
+      // Default to Debit for single amount if no explicit credit indicator
+      debitValue = absAmount;
+    }
+  } else {
+    const debit = parseTransactionAmount(valueAt(row, headers.debit), "debit");
+    if (debit.reason !== null) {
+      return { transaction: null, reason: debit.reason };
+    }
+    const credit = parseTransactionAmount(valueAt(row, headers.credit), "credit");
+    if (credit.reason !== null) {
+      return { transaction: null, reason: credit.reason };
+    }
+    if (debit.value !== null && credit.value !== null) {
+      return { transaction: null, reason: "Both debit and credit amounts are present." };
+    }
+    if (debit.value === null && credit.value === null) {
+      return { transaction: null, reason: "Transaction amount or direction is missing." };
+    }
+    debitValue = debit.value;
+    creditValue = credit.value;
   }
 
   const parsedBalance = normalizeMoney(valueAt(row, headers.balance));
@@ -148,8 +204,8 @@ function normalizeRow(
     transaction: {
       date: parsedDate.value,
       description,
-      debit: debit.value,
-      credit: credit.value,
+      debit: debitValue,
+      credit: creditValue,
       balance: parsedBalance.value,
       reference,
       source,

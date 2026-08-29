@@ -5,12 +5,120 @@ import type { CellValue, DetectedTable, HeaderMapping } from "./types.js";
 type HeaderField = keyof HeaderMapping;
 
 const HEADER_ALIASES: Record<HeaderField, readonly string[]> = {
-  date: ["date", "transaction date", "tran date", "txn date", "value date"],
-  description: ["description", "narration", "particulars", "transaction remarks", "remarks"],
-  debit: ["debit", "withdrawal", "withdrawal amt", "debit amount"],
-  credit: ["credit", "deposit", "deposit amt", "credit amount"],
-  balance: ["balance", "closing balance", "running balance"],
-  reference: ["reference", "ref no", "cheque no", "chq no", "transaction id", "tran id"],
+  date: [
+    "date",
+    "transaction date",
+    "tran date",
+    "txn date",
+    "value date",
+    "post date",
+    "posting date",
+    "payment date",
+    "date time",
+    "date & time",
+    "dated",
+    "time",
+  ],
+  description: [
+    "description",
+    "narration",
+    "particulars",
+    "transaction remarks",
+    "remarks",
+    "transaction details",
+    "details",
+    "paid to",
+    "received from",
+    "payment to",
+    "transferred to",
+    "beneficiary name",
+    "merchant",
+    "party name",
+    "counterparty",
+    "account description",
+    "name",
+    "paid to received from",
+  ],
+  debit: [
+    "debit",
+    "withdrawal",
+    "withdrawal amt",
+    "withdrawal amount",
+    "debit amount",
+    "dr",
+    "dr amount",
+    "paid out",
+    "money out",
+    "spent",
+    "withdrawal inr",
+    "debit inr",
+  ],
+  credit: [
+    "credit",
+    "deposit",
+    "deposit amt",
+    "deposit amount",
+    "credit amount",
+    "cr",
+    "cr amount",
+    "paid in",
+    "money in",
+    "received",
+    "deposit inr",
+    "credit inr",
+  ],
+  amount: [
+    "amount",
+    "txn amount",
+    "transaction amount",
+    "trans amount",
+    "total amount",
+    "amt",
+    "net amount",
+    "amount inr",
+    "amt inr",
+  ],
+  type: [
+    "type",
+    "txn type",
+    "transaction type",
+    "cr dr",
+    "dr cr",
+    "cr dr",
+    "d c",
+    "c d",
+    "payment type",
+    "payment mode",
+    "direction",
+    "action",
+  ],
+  balance: [
+    "balance",
+    "closing balance",
+    "running balance",
+    "available balance",
+    "account balance",
+    "balance inr",
+    "bal inr",
+    "net balance",
+  ],
+  reference: [
+    "reference",
+    "ref no",
+    "reference no",
+    "reference number",
+    "cheque no",
+    "chq no",
+    "cheque number",
+    "chq ref no",
+    "transaction id",
+    "txn id",
+    "tran id",
+    "utr",
+    "utr no",
+    "rrn",
+    "order id",
+  ],
 };
 
 const HEADER_WEIGHTS: Record<HeaderField, number> = {
@@ -18,6 +126,8 @@ const HEADER_WEIGHTS: Record<HeaderField, number> = {
   description: 1,
   debit: 3,
   credit: 3,
+  amount: 3,
+  type: 2,
   balance: 1,
   reference: 1,
 };
@@ -50,7 +160,11 @@ export function mapHeaders(row: CellValue[]): HeaderMapping | null {
     }
   }
 
-  if (mapping.date === undefined || (mapping.debit === undefined && mapping.credit === undefined)) {
+  const hasDate = mapping.date !== undefined;
+  const hasMoney =
+    mapping.debit !== undefined || mapping.credit !== undefined || mapping.amount !== undefined;
+
+  if (!hasDate || !hasMoney) {
     return null;
   }
   return mapping as HeaderMapping;
@@ -92,7 +206,12 @@ export function hasLikelyTransactions(table: DetectedTable): boolean {
     }
     const debit = table.headers.debit === undefined ? null : normalizeMoney(row[table.headers.debit] ?? null);
     const credit = table.headers.credit === undefined ? null : normalizeMoney(row[table.headers.credit] ?? null);
-    if ((debit !== null && debit.value !== null) || (credit !== null && credit.value !== null)) {
+    const amount = table.headers.amount === undefined ? null : normalizeMoney(row[table.headers.amount] ?? null);
+    if (
+      (debit !== null && debit.value !== null) ||
+      (credit !== null && credit.value !== null) ||
+      (amount !== null && amount.value !== null)
+    ) {
       return true;
     }
   }

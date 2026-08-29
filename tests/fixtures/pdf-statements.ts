@@ -296,3 +296,35 @@ export function unsupportedLayoutPdfBytes(): ArrayBuffer {
   ]);
   return pdf.buffer as ArrayBuffer;
 }
+
+/** 9. PhonePe / UPI statement PDF with single Amount column and Type column */
+export function phonepeStatementPdfBytes(): ArrayBuffer {
+  const pdf = buildSyntheticPdf([
+    {
+      lines: [
+        { text: "PhonePe Transaction Statement", x: 200, y: 750 },
+        { text: "Date", x: 40, y: 700 },
+        { text: "Transaction Details", x: 180, y: 700 },
+        { text: "Type", x: 340, y: 700 },
+        { text: "Amount", x: 410, y: 700 },
+        { text: "Transaction ID", x: 490, y: 700 },
+        { text: "12 May 2024, 08:30 PM", x: 40, y: 665 },
+        { text: "Paid to Swiggy", x: 180, y: 665 },
+        { text: "DEBIT", x: 340, y: 665 },
+        { text: "450.00", x: 410, y: 665 },
+        { text: "T2405122030", x: 490, y: 665 },
+        { text: "13 May 2024, 11:15 AM", x: 40, y: 635 },
+        { text: "Received from Ramesh", x: 180, y: 635 },
+        { text: "CREDIT", x: 340, y: 635 },
+        { text: "2,500.00", x: 410, y: 635 },
+        { text: "T2405131115", x: 490, y: 635 },
+        { text: "14 May 2024, 04:00 PM", x: 40, y: 605 },
+        { text: "Electricity Bill Paid", x: 180, y: 605 },
+        { text: "DEBIT", x: 340, y: 605 },
+        { text: "1,200.00", x: 410, y: 605 },
+        { text: "T2405141600", x: 490, y: 605 },
+      ],
+    },
+  ]);
+  return pdf.buffer as ArrayBuffer;
+}

@@ -71,6 +71,8 @@ export interface HeaderMapping {
   description?: number;
   debit?: number;
   credit?: number;
+  amount?: number;
+  type?: number;
   balance?: number;
   reference?: number;
 }
