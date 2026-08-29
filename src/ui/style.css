@@ -1203,15 +1203,15 @@ body {
 
 .anomaly-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.25rem;
-  padding: 1.1rem 1.35rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.15rem 1.25rem;
   background: var(--bg-surface-raised);
   border: 1px solid var(--border-subtle);
   border-left: 4px solid var(--color-warning);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
+  overflow: hidden;
 }
 
 .anomaly-item:hover {
@@ -1219,11 +1219,18 @@ body {
   transform: translateY(-1px);
 }
 
-.anomaly-header {
+.anomaly-top-row {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 0.3rem;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.2rem;
+}
+
+.anomaly-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .anomaly-date {
@@ -1231,22 +1238,24 @@ body {
   color: var(--text-muted);
 }
 
+.anomaly-amount {
+  font-size: 1.15rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .anomaly-desc {
   font-size: 0.95rem;
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.35;
+  word-break: break-word;
 }
 
 .anomaly-reason {
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin-top: 0.15rem;
-}
-
-.anomaly-amount {
-  font-size: 1.35rem;
-  font-weight: 800;
-  white-space: nowrap;
+  line-height: 1.4;
 }
 
 /* ==========================================================================

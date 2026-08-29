@@ -24,6 +24,19 @@ export function formatDateRange(transactions: NormalizedTransaction[]): string {
   return `${formatDisplayDate(first)} – ${formatDisplayDate(last)}`;
 }
 
+/** Cleans verbose transaction narration (e.g. PhonePe UTR, Txn ID, Timestamps) for concise card titles */
+export function cleanDisplayDescription(description: string | null): string {
+  if (description === null || description.trim() === "") return "Unlabeled transaction";
+  let clean = description.trim();
+  // Strip trailing transaction IDs, UTRs, and payment source text
+  clean = clean.replace(/\s+(?:transaction id|txn id|utr no\.?|utr|rrn|bharat connect|paid by|order id)\b.*$/i, "");
+  // Strip time if embedded e.g. " 06:07 AM", " 02:07 PM"
+  clean = clean.replace(/\s+\d{1,2}:\d{2}\s*(?:am|pm).*$/i, "");
+  // Strip trailing technical long alphanumeric IDs
+  clean = clean.replace(/\s+[A-Z0-9]{18,}.*$/i, "");
+  return clean.trim() || description.trim();
+}
+
 /** Safe HTML string escaping */
 export function escapeHtml(str: string): string {
   return str
