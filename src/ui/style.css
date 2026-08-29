@@ -708,8 +708,8 @@ body {
 }
 
 .findings-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 1rem;
 }
 
@@ -747,14 +747,18 @@ body {
 }
 
 .finding-main {
-  padding: 1.5rem 1.65rem;
+  padding: 1.15rem 1.35rem;
+}
+
+.finding-card.is-dominant .finding-main {
+  padding: 1.6rem 1.75rem;
 }
 
 .finding-header {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.5rem;
   flex-wrap: wrap;
 }
 
@@ -787,7 +791,7 @@ body {
 .severity-pill.severity-critical { background: var(--color-negative-bg); color: var(--color-negative); border: 1px solid var(--color-negative-border); }
 
 .finding-type-label {
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   font-weight: 600;
   color: var(--text-dim);
   text-transform: uppercase;
@@ -795,10 +799,10 @@ body {
 }
 
 .finding-title {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
   line-height: 1.35;
 }
 
@@ -810,8 +814,14 @@ body {
 }
 
 .finding-message {
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 0.85rem;
+}
+
+.finding-card.is-dominant .finding-message {
+  font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 1rem;
 }
@@ -1186,8 +1196,8 @@ body {
 .badge-warning { background: var(--color-warning-bg); color: var(--color-warning); border: 1px solid var(--color-warning-border); }
 
 .anomalies-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 0.85rem;
 }
 

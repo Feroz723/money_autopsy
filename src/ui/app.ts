@@ -107,8 +107,8 @@ export class MoneyAutopsyApp {
     } else if (stage === "ready" && importResult && analysisResult && autopsyResult) {
       mainContent = `
         <div class="report-view">
-          ${renderFindingsList(autopsyResult.findings, selectedFindingId, analysisResult)}
           ${renderSummaryCards(analysisResult.totals)}
+          ${renderFindingsList(autopsyResult.findings, selectedFindingId, analysisResult)}
 
           <div class="breakdown-grid">
             ${renderCategoryBreakdown(analysisResult.categories)}
