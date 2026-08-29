@@ -1692,32 +1692,201 @@ body {
   color: var(--text-dim);
 }
 
-/* Responsive */
+/* ==========================================================================
+   Mobile & Responsive Adaptations
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 1.75rem 1.25rem 3.5rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-
   .header-content {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.85rem 1rem;
   }
 
-  .header-actions {
-    width: 100%;
-    justify-content: space-between;
+  .brand-logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .brand-title {
+    font-size: 1.05rem;
+  }
+
+  .brand-tagline {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: clamp(1.85rem, 6vw, 2.35rem);
+    letter-spacing: -0.025em;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .landing-section {
+    padding: 1.5rem 0 2.5rem;
+  }
+
+  .landing-hero {
+    margin-bottom: 1.75rem;
+  }
+
+  .drop-zone {
+    padding: 2.25rem 1.25rem;
+  }
+
+  .drop-icon-circle {
+    width: 64px;
+    height: 64px;
+  }
+
+  .breakdown-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .table-toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
   }
 
   .filter-group {
-    flex-direction: column;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .select-filter {
+    flex: 1;
+    min-width: 0;
   }
 
   .preview-metrics-grid {
     grid-template-columns: 1fr;
   }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .trust-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
 }
+
+@media (max-width: 600px) {
+  .main-content {
+    padding: 1.25rem 0.85rem 3rem;
+  }
+
+  .finding-main {
+    padding: 1.2rem 1rem;
+  }
+
+  .finding-card.is-dominant .finding-title {
+    font-size: 1.3rem;
+  }
+
+  .finding-title {
+    font-size: 1.1rem;
+  }
+
+  .finding-message {
+    font-size: 0.875rem;
+  }
+
+  .evidence-inner {
+    padding: 1rem;
+  }
+
+  .evidence-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .breakdown-card,
+  .analysis-feature-card,
+  .transactions-section,
+  .trust-card {
+    padding: 1.25rem 1rem;
+    border-radius: var(--radius-md);
+  }
+
+  .anomaly-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.95rem 1rem;
+  }
+
+  .anomaly-amount {
+    align-self: flex-end;
+    font-size: 1.2rem;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .select-filter {
+    width: 100%;
+  }
+
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .card-amount {
+    font-size: 1.85rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  .merchant-name-text {
+    max-width: 130px;
+  }
+}
+
+@media (max-width: 400px) {
+  .header-actions .privacy-badge span:last-child {
+    display: none;
+  }
+
+  .privacy-badge {
+    padding: 0.35rem 0.6rem;
+  }
+
+  .trust-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .preview-finding-headline {
+    font-size: 1.15rem;
+  }
+}
+
