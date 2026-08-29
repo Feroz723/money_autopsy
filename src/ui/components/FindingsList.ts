@@ -69,10 +69,10 @@ export function renderFindingsList(
   return `
     <section class="autopsy-section" aria-labelledby="autopsy-heading">
       <div class="section-header">
-        <div>
-          <h2 id="autopsy-heading" class="section-title">Money Autopsy</h2>
-          <p class="section-subtitle">Mathematical insights and spending observations extracted from your data.</p>
-        </div>
+          <div>
+            <h2 id="autopsy-heading" class="section-title">What We Found</h2>
+            <p class="section-subtitle">Evidence-backed patterns from your statement.</p>
+          </div>
         <span class="findings-count-badge">${findings.length} Evidence-Backed Finding${findings.length === 1 ? "" : "s"}</span>
       </div>
 

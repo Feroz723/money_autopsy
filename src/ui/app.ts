@@ -116,9 +116,9 @@ export class MoneyAutopsyApp {
           </div>
 
           ${renderRecurringSection(analysisResult.recurringPayments)}
-          ${renderAnomaliesSection(analysisResult.anomalies)}
+          ${renderAnomaliesSection(analysisResult.anomalies, this.state.showAllAnomalies, this.state.selectedAnomalyIndex)}
           ${renderTransactionTable(importResult.transactions, transactionFilter, this.state.showAllTransactions)}
-          ${renderTrustBanner(importResult)}
+          ${renderTrustBanner(importResult, autopsyResult.findings.length)}
         </div>
       `;
     } else {
@@ -197,6 +197,18 @@ export class MoneyAutopsyApp {
       });
     });
 
+    // Toggle anomaly details buttons
+    const anomalyDetailBtns = this.container.querySelectorAll<HTMLButtonElement>(".btn-toggle-anomaly-detail");
+    anomalyDetailBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const rawIdx = btn.getAttribute("data-anomaly-index");
+        const idx = rawIdx ? parseInt(rawIdx, 10) : null;
+        this.state.selectedAnomalyIndex = this.state.selectedAnomalyIndex === idx ? null : idx;
+        this.render();
+      });
+    });
+
     // Toggle all findings
     const btnToggleFindings = this.container.querySelector<HTMLButtonElement>("#btn-toggle-all-findings");
     btnToggleFindings?.addEventListener("click", () => {
@@ -215,6 +227,13 @@ export class MoneyAutopsyApp {
     const btnToggleMerchants = this.container.querySelector<HTMLButtonElement>("#btn-toggle-all-merchants");
     btnToggleMerchants?.addEventListener("click", () => {
       this.state.showAllMerchants = !this.state.showAllMerchants;
+      this.render();
+    });
+
+    // Toggle all anomalies
+    const btnToggleAnomalies = this.container.querySelector<HTMLButtonElement>("#btn-toggle-all-anomalies");
+    btnToggleAnomalies?.addEventListener("click", () => {
+      this.state.showAllAnomalies = !this.state.showAllAnomalies;
       this.render();
     });
 

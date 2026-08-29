@@ -2,7 +2,7 @@ import type { ImportResult } from "../../ingestion/types.js";
 import { getSourceDisplayName } from "../config.js";
 import { formatDateRange, formatIndianMoney, escapeHtml } from "../formatters.js";
 
-export function renderTrustBanner(importResult: ImportResult): string {
+export function renderTrustBanner(importResult: ImportResult, findingsCount?: number): string {
   const { diagnostics, reliable, source, transactions, totals, format } = importResult;
   const { balanceVerification, rejectedRows, possibleDuplicates } = diagnostics;
   const isVerified = balanceVerification.status === "verified";
@@ -110,6 +110,19 @@ export function renderTrustBanner(importResult: ImportResult): string {
               : ""
           }
         </div>
+      </div>
+
+      <div class="report-closing-box">
+        <h3 class="closing-title">That's the Picture</h3>
+        <p class="closing-summary">
+          <span>${transactions.length.toLocaleString("en-IN")} transactions analyzed</span>
+          <span>&bull;</span>
+          <span>${findingsCount !== undefined ? `${findingsCount} findings` : "Deterministic analysis complete"}</span>
+          <span>&bull;</span>
+          <span class="${isVerified ? "text-positive font-medium" : isUnreliable ? "text-warning font-medium" : "text-muted"}">
+            ${isVerified ? "Balances verified" : isUnreliable ? "Statement needs review" : "Balance check unavailable"}
+          </span>
+        </p>
       </div>
     </section>
   `;

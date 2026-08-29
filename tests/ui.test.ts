@@ -158,16 +158,17 @@ describe("MoneyAutopsyApp UI Orchestrator", () => {
     expect(container.innerHTML).toContain("&lt;script&gt;alert('xss')&lt;/script&gt;");
   });
 
-  it("renders clean report header and 4-metric money summary", async () => {
+  it("renders clean report header and 4-metric money summary with Money In and Money Out", async () => {
     const file = createMockFile("statement.csv", genericCsv);
     await app.processFile(file);
 
     expect(container.querySelector(".report-header")).not.toBeNull();
     expect(container.textContent).toContain("Here's what happened to your money");
-    expect(container.textContent).toContain("Spent");
-    expect(container.textContent).toContain("Income");
+    expect(container.textContent).toContain("Money Out");
+    expect(container.textContent).toContain("Money In");
     expect(container.textContent).toContain("Net Cash Flow");
     expect(container.textContent).toContain("Transactions");
+    expect(container.textContent).toContain("That's the Picture");
   });
 
   it("collapses transaction ledger initially and expands on user request", async () => {

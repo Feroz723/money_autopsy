@@ -1437,18 +1437,94 @@ body {
   white-space: nowrap;
 }
 
-.anomaly-desc {
-  font-size: 0.95rem;
-  color: var(--text-primary);
-  font-weight: 700;
-  line-height: 1.35;
-  word-break: break-word;
+.anomaly-consumer-summary {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0.15rem 0 0.35rem;
 }
 
-.anomaly-reason {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  line-height: 1.4;
+.anomaly-action-row {
+  display: flex;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.btn-toggle-anomaly-detail {
+  background: transparent;
+  border: none;
+  color: var(--brand-accent);
+  font-size: 0.775rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.btn-toggle-anomaly-detail:hover {
+  background: rgba(56, 189, 248, 0.08);
+  color: #7dd3fc;
+}
+
+.anomaly-evidence-drawer {
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: fadeIn 200ms ease;
+}
+
+.evidence-raw-desc {
+  font-size: 0.75rem;
+  word-break: break-all;
+  margin-top: 0.25rem;
+}
+
+.evidence-raw-desc code {
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.15rem 0.35rem;
+  border-radius: var(--radius-sm);
+}
+
+.report-closing-box {
+  margin-top: 2rem;
+  padding: 1.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.closing-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.closing-summary {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
 }
 
 /* ==========================================================================

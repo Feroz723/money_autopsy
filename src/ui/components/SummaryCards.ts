@@ -54,7 +54,7 @@ export function renderSummaryCards(totals: CashFlowTotals, importResult?: Import
       <div class="summary-grid">
         <div class="summary-card card-spending">
           <div class="card-header">
-            <span class="card-label">Spent</span>
+            <span class="card-label">Money Out</span>
             <span class="card-icon" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="7" y1="7" x2="17" y2="17"/>
@@ -68,7 +68,7 @@ export function renderSummaryCards(totals: CashFlowTotals, importResult?: Import
 
         <div class="summary-card card-income">
           <div class="card-header">
-            <span class="card-label">Income</span>
+            <span class="card-label">Money In</span>
             <span class="card-icon" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="7" y1="17" x2="17" y2="7"/>

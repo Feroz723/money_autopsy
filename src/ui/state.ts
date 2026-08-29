@@ -16,9 +16,11 @@ export interface AppState {
   analysisResult?: AnalysisResult | undefined;
   autopsyResult?: AutopsyResult | undefined;
   selectedFindingId?: string | null | undefined;
+  selectedAnomalyIndex?: number | null | undefined;
   showAllFindings?: boolean | undefined;
   showAllCategories?: boolean | undefined;
   showAllMerchants?: boolean | undefined;
+  showAllAnomalies?: boolean | undefined;
   showAllTransactions?: boolean | undefined;
   transactionFilter?: {
     query: string;
@@ -34,6 +36,7 @@ export function createInitialState(): AppState {
     showAllFindings: false,
     showAllCategories: false,
     showAllMerchants: false,
+    showAllAnomalies: false,
     showAllTransactions: false,
     transactionFilter: {
       query: "",
