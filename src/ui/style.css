@@ -135,9 +135,9 @@ body {
 .main-content {
   flex: 1;
   width: 100%;
-  max-width: 1140px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 2.25rem 1.5rem 4.5rem;
+  padding: 2.25rem clamp(1rem, 3.5vw, 3rem) 5rem;
 }
 
 /* Header */
@@ -151,9 +151,9 @@ body {
 }
 
 .header-content {
-  max-width: 1140px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 1.1rem 1.5rem;
+  padding: 1.1rem clamp(1rem, 3.5vw, 3rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -662,8 +662,8 @@ body {
    ========================================================================== */
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1.15rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 1.25rem;
 }
 
 .summary-card {
@@ -839,8 +839,8 @@ body {
 
 .findings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  gap: 1.25rem;
 }
 
 .findings-disclosure-row {
@@ -1156,7 +1156,7 @@ body {
    ========================================================================== */
 .breakdown-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
   gap: 1.5rem;
 }
 
@@ -1987,6 +1987,16 @@ body {
 @media (max-width: 1024px) {
   .main-content {
     padding: 1.75rem 1.25rem 3.5rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.15rem;
+  }
+
+  .breakdown-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 }
 
