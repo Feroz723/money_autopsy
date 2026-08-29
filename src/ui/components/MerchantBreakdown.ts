@@ -10,21 +10,24 @@ function getMerchantInitials(name: string): string {
   return (clean.slice(0, 2) || "M").toUpperCase();
 }
 
-export function renderMerchantBreakdown(topMerchants: MerchantSummary[]): string {
+export function renderMerchantBreakdown(topMerchants: MerchantSummary[], showAll = false): string {
   if (topMerchants.length === 0) {
     return `
       <section class="breakdown-card" aria-labelledby="merchant-heading">
-        <h3 id="merchant-heading" class="card-title">Top Spending Merchants</h3>
+        <h3 id="merchant-heading" class="card-title">Top Merchants</h3>
         <p class="empty-text">No merchant spending recorded.</p>
       </section>
     `;
   }
 
+  const visibleMerchants = showAll ? topMerchants : topMerchants.slice(0, 5);
+  const hiddenCount = topMerchants.length - visibleMerchants.length;
+
   return `
     <section class="breakdown-card" aria-labelledby="merchant-heading">
       <div class="card-title-row">
         <div>
-          <h3 id="merchant-heading" class="card-title">Top Spending Merchants</h3>
+          <h3 id="merchant-heading" class="card-title">Top Merchants</h3>
           <p class="card-subtitle">Payees with highest total volume</p>
         </div>
         <span class="card-meta-pill">Ranked by Volume</span>
@@ -41,7 +44,7 @@ export function renderMerchantBreakdown(topMerchants: MerchantSummary[]): string
             </tr>
           </thead>
           <tbody>
-            ${topMerchants
+            ${visibleMerchants
               .map(
                 (m) => `
                   <tr>
@@ -61,6 +64,26 @@ export function renderMerchantBreakdown(topMerchants: MerchantSummary[]): string
           </tbody>
         </table>
       </div>
+
+      ${
+        topMerchants.length > 5
+          ? `
+            <div class="disclosure-footer">
+              <button 
+                type="button" 
+                id="btn-toggle-all-merchants" 
+                class="btn-text-disclosure" 
+                aria-expanded="${showAll}"
+              >
+                <span>${showAll ? "Show top 5 merchants" : `Show all ${topMerchants.length} merchants (${hiddenCount} more)`}</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate(${showAll ? "180deg" : "0deg"}); transition: transform 0.2s ease;">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+            </div>
+          `
+          : ""
+      }
     </section>
   `;
 }

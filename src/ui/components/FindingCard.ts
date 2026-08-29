@@ -253,7 +253,7 @@ export function renderFindingCard(finding: Finding, isExpanded = false, isDomina
             </span>
             <span class="finding-type-label">${escapeHtml(type.replace(/_/g, " "))}</span>
           </div>
-          ${isDominant ? `<span class="badge-hero">PRIMARY FINDING</span>` : ""}
+          ${isDominant ? `<span class="badge-hero">THE BIGGEST THING WE FOUND</span>` : ""}
         </div>
 
         <h3 class="finding-title">${escapeHtml(title)}</h3>

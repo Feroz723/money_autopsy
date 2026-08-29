@@ -65,7 +65,7 @@ export function normalizeDate(value: CellValue): DateParseResult {
   }
 
   // Strip trailing timestamps e.g. ", 08:30 PM", " 14:20:00", " at 3:30 pm"
-  let text = String(value)
+  const text = String(value)
     .trim()
     .replace(/(,\s*|\s+at\s+|\s+)\d{1,2}:\d{2}(:\d{2})?(\s*(am|pm))?/i, "")
     .trim();

@@ -39,13 +39,39 @@ export function filterTransactions(
 
 export function renderTransactionTable(
   transactions: NormalizedTransaction[],
-  filter: FilterOptions = { query: "", category: "all", direction: "all" }
+  filter: FilterOptions = { query: "", category: "all", direction: "all" },
+  isExpanded = false
 ): string {
   if (transactions.length === 0) {
     return `
       <section class="transactions-section" aria-labelledby="tx-heading">
-        <h3 id="tx-heading" class="section-title">Transactions</h3>
+        <h3 id="tx-heading" class="section-title">All Transactions</h3>
         <p class="empty-text">No transactions recorded.</p>
+      </section>
+    `;
+  }
+
+  if (!isExpanded) {
+    return `
+      <section class="transactions-section is-collapsed" aria-labelledby="tx-heading">
+        <div class="transactions-header-row">
+          <div>
+            <h3 id="tx-heading" class="section-title">All Transactions</h3>
+            <p class="section-subtitle">${transactions.length} normalized transactions in ledger</p>
+          </div>
+          <button 
+            type="button" 
+            id="btn-toggle-all-transactions" 
+            class="btn btn-secondary" 
+            aria-expanded="false"
+            aria-controls="transactions-table-container"
+          >
+            <span>View all ${transactions.length} transactions</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+        </div>
       </section>
     `;
   }
@@ -55,13 +81,24 @@ export function renderTransactionTable(
   const filtered = filterTransactions(transactions, filter);
 
   return `
-    <section class="transactions-section" aria-labelledby="tx-heading">
-      <div class="section-header">
+    <section class="transactions-section is-expanded" id="transactions-table-container" aria-labelledby="tx-heading">
+      <div class="transactions-header-row">
         <div>
-          <h3 id="tx-heading" class="section-title">Explore Transactions</h3>
+          <h3 id="tx-heading" class="section-title">All Transactions</h3>
           <p class="section-subtitle">Normalized transaction ledger with deterministic category tagging.</p>
         </div>
-        <span class="tx-count-label">Showing ${filtered.length} of ${transactions.length} transactions</span>
+        <button 
+          type="button" 
+          id="btn-toggle-all-transactions" 
+          class="btn btn-secondary" 
+          aria-expanded="true"
+          aria-controls="transactions-table-container"
+        >
+          <span>Hide transaction list</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate(180deg);">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
       </div>
 
       <div class="table-toolbar">

@@ -16,6 +16,10 @@ export interface AppState {
   analysisResult?: AnalysisResult | undefined;
   autopsyResult?: AutopsyResult | undefined;
   selectedFindingId?: string | null | undefined;
+  showAllFindings?: boolean | undefined;
+  showAllCategories?: boolean | undefined;
+  showAllMerchants?: boolean | undefined;
+  showAllTransactions?: boolean | undefined;
   transactionFilter?: {
     query: string;
     category: string;
@@ -27,6 +31,10 @@ export function createInitialState(): AppState {
   return {
     stage: "idle",
     stageMessage: "",
+    showAllFindings: false,
+    showAllCategories: false,
+    showAllMerchants: false,
+    showAllTransactions: false,
     transactionFilter: {
       query: "",
       category: "all",

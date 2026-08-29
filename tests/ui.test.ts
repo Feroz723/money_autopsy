@@ -157,6 +157,36 @@ describe("MoneyAutopsyApp UI Orchestrator", () => {
     expect(container.innerHTML).not.toContain("<script>alert('xss')</script>");
     expect(container.innerHTML).toContain("&lt;script&gt;alert('xss')&lt;/script&gt;");
   });
+
+  it("renders clean report header and 4-metric money summary", async () => {
+    const file = createMockFile("statement.csv", genericCsv);
+    await app.processFile(file);
+
+    expect(container.querySelector(".report-header")).not.toBeNull();
+    expect(container.textContent).toContain("Here's what happened to your money");
+    expect(container.textContent).toContain("Spent");
+    expect(container.textContent).toContain("Income");
+    expect(container.textContent).toContain("Net Cash Flow");
+    expect(container.textContent).toContain("Transactions");
+  });
+
+  it("collapses transaction ledger initially and expands on user request", async () => {
+    const file = createMockFile("statement.csv", genericCsv);
+    await app.processFile(file);
+
+    // Default: collapsed
+    expect(container.querySelector(".transactions-section.is-collapsed")).not.toBeNull();
+    expect(container.querySelector("#tx-search-input")).toBeNull();
+
+    // Click to expand
+    const toggleBtn = container.querySelector<HTMLButtonElement>("#btn-toggle-all-transactions");
+    expect(toggleBtn).not.toBeNull();
+    toggleBtn?.click();
+
+    // Expanded: toolbar & table visible
+    expect(container.querySelector(".transactions-section.is-expanded")).not.toBeNull();
+    expect(container.querySelector("#tx-search-input")).not.toBeNull();
+  });
 });
 
 describe("Transaction Filtering Logic", () => {

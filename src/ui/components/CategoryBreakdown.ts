@@ -12,28 +12,31 @@ const CATEGORY_GRADIENTS = [
   "linear-gradient(90deg, #6366f1, #818cf8)",
 ];
 
-export function renderCategoryBreakdown(categories: CategorySummary[]): string {
+export function renderCategoryBreakdown(categories: CategorySummary[], showAll = false): string {
   if (categories.length === 0) {
     return `
       <section class="breakdown-card" aria-labelledby="cat-heading">
-        <h3 id="cat-heading" class="card-title">Category Outflows</h3>
+        <h3 id="cat-heading" class="card-title">Spending by Category</h3>
         <p class="empty-text">No spending categories recorded.</p>
       </section>
     `;
   }
 
+  const visibleCategories = showAll ? categories : categories.slice(0, 5);
+  const hiddenCount = categories.length - visibleCategories.length;
+
   return `
     <section class="breakdown-card" aria-labelledby="cat-heading">
       <div class="card-title-row">
         <div>
-          <h3 id="cat-heading" class="card-title">Category Outflows</h3>
+          <h3 id="cat-heading" class="card-title">Spending by Category</h3>
           <p class="card-subtitle">Where your outflow concentrated</p>
         </div>
         <span class="card-meta-pill">${categories.length} Categories</span>
       </div>
 
       <div class="ranked-list" role="list">
-        ${categories
+        ${visibleCategories
           .map((cat, idx) => {
             const pct = cat.percentOfTotal ?? 0;
             const gradient = CATEGORY_GRADIENTS[idx % CATEGORY_GRADIENTS.length]!;
@@ -62,6 +65,26 @@ export function renderCategoryBreakdown(categories: CategorySummary[]): string {
           })
           .join("")}
       </div>
+
+      ${
+        categories.length > 5
+          ? `
+            <div class="disclosure-footer">
+              <button 
+                type="button" 
+                id="btn-toggle-all-categories" 
+                class="btn-text-disclosure" 
+                aria-expanded="${showAll}"
+              >
+                <span>${showAll ? "Show top 5 categories" : `Show all ${categories.length} categories (${hiddenCount} more)`}</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate(${showAll ? "180deg" : "0deg"}); transition: transform 0.2s ease;">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+            </div>
+          `
+          : ""
+      }
     </section>
   `;
 }

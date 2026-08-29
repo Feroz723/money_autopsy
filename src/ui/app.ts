@@ -107,17 +107,17 @@ export class MoneyAutopsyApp {
     } else if (stage === "ready" && importResult && analysisResult && autopsyResult) {
       mainContent = `
         <div class="report-view">
-          ${renderSummaryCards(analysisResult.totals)}
-          ${renderFindingsList(autopsyResult.findings, selectedFindingId, analysisResult)}
+          ${renderSummaryCards(analysisResult.totals, importResult)}
+          ${renderFindingsList(autopsyResult.findings, selectedFindingId, analysisResult, this.state.showAllFindings)}
 
           <div class="breakdown-grid">
-            ${renderCategoryBreakdown(analysisResult.categories)}
-            ${renderMerchantBreakdown(analysisResult.topMerchants)}
+            ${renderCategoryBreakdown(analysisResult.categories, this.state.showAllCategories)}
+            ${renderMerchantBreakdown(analysisResult.topMerchants, this.state.showAllMerchants)}
           </div>
 
           ${renderRecurringSection(analysisResult.recurringPayments)}
           ${renderAnomaliesSection(analysisResult.anomalies)}
-          ${renderTransactionTable(importResult.transactions, transactionFilter)}
+          ${renderTransactionTable(importResult.transactions, transactionFilter, this.state.showAllTransactions)}
           ${renderTrustBanner(importResult)}
         </div>
       `;
@@ -197,6 +197,34 @@ export class MoneyAutopsyApp {
       });
     });
 
+    // Toggle all findings
+    const btnToggleFindings = this.container.querySelector<HTMLButtonElement>("#btn-toggle-all-findings");
+    btnToggleFindings?.addEventListener("click", () => {
+      this.state.showAllFindings = !this.state.showAllFindings;
+      this.render();
+    });
+
+    // Toggle all categories
+    const btnToggleCategories = this.container.querySelector<HTMLButtonElement>("#btn-toggle-all-categories");
+    btnToggleCategories?.addEventListener("click", () => {
+      this.state.showAllCategories = !this.state.showAllCategories;
+      this.render();
+    });
+
+    // Toggle all merchants
+    const btnToggleMerchants = this.container.querySelector<HTMLButtonElement>("#btn-toggle-all-merchants");
+    btnToggleMerchants?.addEventListener("click", () => {
+      this.state.showAllMerchants = !this.state.showAllMerchants;
+      this.render();
+    });
+
+    // Toggle all transactions
+    const btnToggleTransactions = this.container.querySelector<HTMLButtonElement>("#btn-toggle-all-transactions");
+    btnToggleTransactions?.addEventListener("click", () => {
+      this.state.showAllTransactions = !this.state.showAllTransactions;
+      this.render();
+    });
+
     // Transaction search input
     const searchInput = this.container.querySelector<HTMLInputElement>("#tx-search-input");
     if (searchInput) {
@@ -242,7 +270,8 @@ export class MoneyAutopsyApp {
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = renderTransactionTable(
           this.state.importResult.transactions,
-          this.state.transactionFilter
+          this.state.transactionFilter,
+          this.state.showAllTransactions
         );
         const newSection = tempDiv.firstElementChild;
         if (newSection) {
